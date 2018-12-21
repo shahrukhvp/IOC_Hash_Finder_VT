@@ -1,5 +1,4 @@
-﻿$api_Key="a86c11b36346da6309f284a270b80ace7a38139de3a35920bc53b35bc5aba07d"
-$IOC_Hash="9d38a0220b2dfb353fc34d03079f2ba2c7de1d4a234f6a2b06365bfc1870cd89"
+﻿$api_Key="Please_Replace_This_Area_With_your_VirusTotal_API_Key"
 $IOC_Hash=0
 $Out_Dir="C:\IOC_Finder"
 $Out_CSV="C:\IOC_Finder\IOC_Hash_Finder.csv"
