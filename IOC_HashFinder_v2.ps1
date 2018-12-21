@@ -1,16 +1,23 @@
 $results = @()
-$api_Key="a86c11b36346da6309f284a270b80ace7a38139de3a35920bc53b35bc5aba07d"
-$IOC_Hash=0
-$Out_Dir="C:\IOC_Finder"
-$temp_File="C:\IOC_Finder\Temp.txt"
-$Hashes_Input_File="C:\IOC_Finder\Input.txt"
-$Output_Match_Error="C:\IOC_Finder\Output_No_Match_Hashes.txt"
-$Output_Match_Success="C:\IOC_Finder\Output_Matched_Hashes.csv"
-$Hashes_Match_Success_Count=0
-$Hashes_Match_Error_Count=0
-$Hashes_Input_Count=0
+$IOC_Hash = 0
+$Out_Dir = "C:\VT_IOC_Hash_Matcher"
+$temp_File = "C:\VT_IOC_Hash_Matcher\Temp.txt"
+$Config_File = ".\VT_API_KEY.conf"
+$Hashes_Input_File = "C:\VT_IOC_Hash_Matcher\Input.txt"
+$Output_Match_Error = "C:\VT_IOC_Hash_Matcher\Output_No_Match_Hashes.txt"
+$Output_Match_Success = "C:\VT_IOC_Hash_Matcher\Output_Matched_Hashes.csv"
+$Hashes_Match_Success_Count = 0
+$Hashes_Match_Error_Count = 0
+$Hashes_Input_Count = 0
+$API_Read = Get-Content $Config_File | Select-String -Pattern "VT_API_KEY"
+$api_Key = $API_Read | Select-String -Pattern "API_KEY="
+$api_Key = $API_Read | Select-String -Pattern "API_KEY="
+$api_Key = $api_Key | %{$_ -replace "VT_API_KEY",""}
+$api_Key = $api_Key | %{$_ -replace " ",""}
+$api_Key = $api_Key | %{$_ -replace '"',""}
+$api_Key = $api_Key | %{$_ -replace "=",""}
 [system.io.directory]::CreateDirectory("$Out_Dir")
-if (Test-Path $Hashes_Input_File) 
+if ( (Test-Path $Hashes_Input_File) -And (Test-Path $Config_File) ) 
     { 
     "Error: The below hashes were not found in VirusTotal:" | Out-File -filepath $Output_Match_Error
     Write-Host "md5                               sha1                                      sha256"
@@ -43,6 +50,7 @@ if (Test-Path $Hashes_Input_File)
         $md5= $md5 | %{$_ -replace "md5",""}
         $md5= $md5 | %{$_ -replace '"',""}
         $md5= $md5 | %{$_ -replace ":",""}
+        del $temp_File
         if ([string]::IsNullOrEmpty($md5))
             {
             $Hashes_Match_Error_Count+=1
@@ -52,7 +60,6 @@ if (Test-Path $Hashes_Input_File)
         else{
             $Hashes_Match_Success_Count+=1
             Write-Host "$md5  $sha1  $sha256"
-            #"$md5  $sha1  $sha256" | Out-File -filepath $Output_Match_Success -Append
             $hashes = @{            
                     MD5   = $md5              
                     SHA1  = $sha1
@@ -60,15 +67,24 @@ if (Test-Path $Hashes_Input_File)
                     }
             $results += New-Object PSObject -Property $hashes
             }
-        #Start-Sleep -s 16
+        Start-Sleep -s 16
         }
     $results | export-csv -Path $Output_Match_Success -NoTypeInformation
     Write-Host "Number of Hashes read from input file     : '$Hashes_Input_Count'"
     Write-Host "Number of Hashes matched in VirusTotal    : '$Hashes_Match_Success_Count'"
     Write-Host "Number of Hashes not matched in VirusTotal: '$Hashes_Match_Error_Count'"
-    del $temp_File
+    Write-Host "Finished. Please check the Directory '$Out_Dir' to see the output files"
     }
 else
     {
-    Write-Host "Error: Input file was not found. Please keep the input files with hash values in the '$Out_Dir' with name 'Input.txt' "
+    if (!(Test-Path $Hashes_Input_File))
+        {
+        Write-Host "Error: Input file was not found."
+        Write-Host "Please keep the input files with hash values in the directory '$Out_Dir' with name 'Input.txt' "
+        }
+    if (!(Test-Path $Hashes_Input_File))
+        {
+        Write-Host "Error: Config file was not found."
+        Write-Host "Please keep the Config File '$Config_File' with hash values in the directory '$Out_Dir' "
+        }
     }
