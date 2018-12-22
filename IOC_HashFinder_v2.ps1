@@ -9,7 +9,6 @@ $Output_Match_Success = "C:\VT_IOC_Hash_Matcher\Output_Matched_Hashes.csv"
 $Hashes_Match_Success_Count = 0
 $Hashes_Match_Error_Count = 0
 $Hashes_Input_Count = 0
-[system.io.directory]::CreateDirectory("$Out_Dir")
 if ( (Test-Path $Hashes_Input_File) -And (Test-Path $Config_File) ) 
     { 
     "Error: The below hashes were not found in VirusTotal:" | Out-File -filepath $Output_Match_Error
@@ -77,12 +76,13 @@ if ( (Test-Path $Hashes_Input_File) -And (Test-Path $Config_File) )
     }
 else
     {
+    [system.io.directory]::CreateDirectory("$Out_Dir")
     if (!(Test-Path $Hashes_Input_File))
         {
         Write-Host "Error: Input file was not found."
         Write-Host "Please keep the input files with hash values in the directory '$Out_Dir' with name 'Input.txt' "
         }
-    if (!(Test-Path $Hashes_Input_File))
+    if (!(Test-Path $Config_File))
         {
         Write-Host "Error: Config file was not found."
         Write-Host "Please keep the Config File '$Config_File' with hash values in the directory '$Out_Dir' "
