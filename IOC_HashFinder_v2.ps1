@@ -9,17 +9,17 @@ $Output_Match_Success = "C:\VT_IOC_Hash_Matcher\Output_Matched_Hashes.csv"
 $Hashes_Match_Success_Count = 0
 $Hashes_Match_Error_Count = 0
 $Hashes_Input_Count = 0
-$API_Read = Get-Content $Config_File | Select-String -Pattern "VT_API_KEY"
-$api_Key = $API_Read | Select-String -Pattern "API_KEY="
-$api_Key = $API_Read | Select-String -Pattern "API_KEY="
-$api_Key = $api_Key | %{$_ -replace "VT_API_KEY",""}
-$api_Key = $api_Key | %{$_ -replace " ",""}
-$api_Key = $api_Key | %{$_ -replace '"',""}
-$api_Key = $api_Key | %{$_ -replace "=",""}
 [system.io.directory]::CreateDirectory("$Out_Dir")
 if ( (Test-Path $Hashes_Input_File) -And (Test-Path $Config_File) ) 
     { 
     "Error: The below hashes were not found in VirusTotal:" | Out-File -filepath $Output_Match_Error
+    $API_Read = Get-Content $Config_File | Select-String -Pattern "VT_API_KEY"
+    $api_Key = $API_Read | Select-String -Pattern "API_KEY="
+    $api_Key = $API_Read | Select-String -Pattern "API_KEY="
+    $api_Key = $api_Key | %{$_ -replace "VT_API_KEY",""}
+    $api_Key = $api_Key | %{$_ -replace " ",""}
+    $api_Key = $api_Key | %{$_ -replace '"',""}
+    $api_Key = $api_Key | %{$_ -replace "=",""}
     Write-Host "md5                               sha1                                      sha256"
     foreach($IOC_Hash in [System.IO.File]::ReadLines($Hashes_Input_File))
         {
