@@ -22,9 +22,11 @@ Before you run the script, please:
 
 Note: The VirusTotal limits the request to the website using an API Key as 4 requests per minute. Hence, to have 12 number of hashes searched, the script requires (12/4)=3 minutes to complete. In case you have a Premium API Key bought from VirusTotal, which comes with no restrictions on the number of requests to VirusTotal.com, feel free to get rid of the code which makes the script wait for 16 seconds after every request. 
 
+In case the powershell scripts are disabled to run in your machine, change the execution policy as follows:
+		set-executionpolicy -scope CurrentUser -ExecutionPolicy Unrestricted
+
+If you haven never run internet explorer in the machine, run it and complete the initial setup steps.
 
 
 Queries:
 https://www.linkedin.com/in/iamshahrukh/
-
-
