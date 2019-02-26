@@ -26,7 +26,7 @@ In case the powershell scripts are disabled to run in your machine, change the e
 
 		set-executionpolicy -scope CurrentUser -ExecutionPolicy Unrestricted
 
-If you haven never run internet explorer in the machine, run it and complete the initial setup steps.
+If you have never run internet explorer in the machine, run it and complete the initial setup steps.
 
 
 Queries:
